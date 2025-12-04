@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORIENTIR — Inner Navigation Starter Guide</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #0a0a0a;
+            color: #e8dcc4;
+            line-height: 1.6;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm;
+            margin: 0 auto;
+            background: #0a0a0a;
+            position: relative;
+            page-break-after: always;
+        }
+
+        .page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 30% 20%, rgba(255, 120, 60, 0.15) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(60, 40, 100, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Cover Page */
+        .cover {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 267mm;
+        }
+
+        .logo-symbol {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 40px;
+            filter: drop-shadow(0 0 40px rgba(232, 220, 196, 0.4));
+        }
+
+        .main-title {
+            font-size: 64px;
+            font-weight: 300;
+            letter-spacing: 16px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #e8dcc4 0%, #d4a574 50%, #c89860 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cover-subtitle {
+            font-size: 18px;
+            letter-spacing: 4px;
+            opacity: 0.6;
+            text-transform: uppercase;
+            margin-bottom: 60px;
+            font-weight: 300;
+        }
+
+        .cover-tagline {
+            font-size: 22px;
+            font-weight: 300;
+            opacity: 0.9;
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #d4a574, transparent);
+            margin: 40px auto;
+        }
+
+        /* Content Pages */
+        h2 {
+            font-size: 32px;
+            font-weight: 300;
+            margin: 40px 0 20px;
+            background: linear-gradient(135deg, #e8dcc4 0%, #d4a574 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h3 {
+            font-size: 20px;
+            font-weight: 400;
+            margin: 30px 0 15px;
+            color: #d4a574;
+        }
+
+        p {
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .intro-text {
+            font-size: 16px;
+            line-height: 1.8;
+            margin: 20px 0;
+            font-weight: 300;
+        }
+
+        .emphasis {
+            font-size: 15px;
+            font-style: italic;
+            opacity: 0.7;
+            display: block;
+            margin: 20px 0;
+        }
+
+        ul {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        li {
+            font-size: 14px;
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #d4a574;
+            font-size: 16px;
+        }
+
+        .section-box {
+            background: linear-gradient(135deg, rgba(232, 220, 196, 0.05), rgba(212, 165, 116, 0.05));
+            border: 1px solid rgba(212, 165, 116, 0.2);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+        }
+
+        .question-box {
+            background: rgba(232, 220, 196, 0.04);
+            border-left: 3px solid #d4a574;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 10px;
+            color: #e8dcc4;
+        }
+
+        .question-options {
+            font-size: 13px;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+
+        /* Interactive CTA Button */
+        .cta-section {
+            margin: 50px 0;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(255, 120, 60, 0.1), rgba(212, 165, 116, 0.1));
+            border: 1px solid rgba(212, 165, 116, 0.3);
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 15px;
+            color: #e8dcc4;
+        }
+
+        .cta-description {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 25px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff7840 0%, #d4a574 50%, #e8dcc4 100%);
+            color: #0a0a0a;
+            padding: 18px 50px;
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 500;
+            box-shadow: 0 10px 40px rgba(255, 120, 60, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(255, 120, 60, 0.6);
+        }
+
+        .gradient-accent {
+            height: 3px;
+            background: linear-gradient(90deg, 
+                transparent,
+                #ff7840,
+                #d4a574,
+                #6b5cff,
+                transparent
+            );
+            margin: 30px auto;
+            width: 80%;
+            border-radius: 2px;
+        }
+
+        /* Footer */
+        .footer {
+            position: absolute;
+            bottom: 15mm;
+            left: 15mm;
+            right: 15mm;
+            text-align: center;
+            font-size: 11px;
+            opacity: 0.4;
+            letter-spacing: 2px;
+        }
+
+        @media print {
+            body {
+                background: #0a0a0a;
+            }
+            .page {
+                margin: 0;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1: COVER -->
+    <div class="page">
+        <div class="content cover">
+            <div class="logo-symbol">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="100" cy="100" r="88" fill="none" stroke="#e8dcc4" stroke-width="2.5" opacity="0.9"/>
+                    <circle cx="100" cy="12" r="7" fill="#e8dcc4"/>
+                    <circle cx="188" cy="100" r="7" fill="#e8dcc4"/>
+                    <circle cx="100" cy="188" r="7" fill="#e8dcc4"/>
+                    <circle cx="12" cy="100" r="7" fill="#e8dcc4"/>
+                    <line x1="25" y1="100" x2="175" y2="100" stroke="#e8dcc4" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="100" y1="40" x2="100" y2="175" stroke="#e8dcc4" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="60" y1="140" x2="100" y2="100" stroke="#e8dcc4" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="140" y1="140" x2="100" y2="100" stroke="#e8dcc4" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M 100 40 L 118 70 L 100 100 L 82 70 Z" fill="none" stroke="#e8dcc4" stroke-width="2.5" opacity="0.9"/>
+                </svg>
+            </div>
+            
+            <h1 class="main-title">ORIENTIR</h1>
+            <div class="cover-subtitle">Inner Navigation Quick Test</div>
+            <div class="divider"></div>
+            <div class="cover-tagline">Find your inner starting point.</div>
+        </div>
+        <div class="footer">© 2025 ORIENTIR — Navigation of Consciousness</div>
+    </div>
+
+    <!-- PAGE 2: WHAT IS ORIENTIR -->
+    <div class="page">
+        <div class="content">
+            <h2>What ORIENTIR Is</h2>
+            
+            <div class="intro-text">
+                <strong>ORIENTIR — Inner Navigation for the Transition Era.</strong>
+            </div>
+            
+            <p>When direction collapses, you don't need saving — you need orientation.</p>
+            
+            <p>ORIENTIR is a consciousness-navigation tool built at the meeting point of human awareness and artificial intelligence.</p>
+            
+            <div class="section-box">
+                <p style="margin-bottom: 10px;"><strong>Not therapy.</strong></p>
+                <p style="margin-bottom: 10px;"><strong>Not coaching.</strong></p>
+                <p style="margin-bottom: 10px;"><strong>Not esoterics.</strong></p>
+                <p style="margin: 0;"><strong>Just navigation: quiet, alive, precise.</strong></p>
+            </div>
+
+            <div class="gradient-accent"></div>
+
+            <h2>How It Works</h2>
+            
+            <div class="question-box">
+                <div class="question-text">1 — You enter a short dialogue.</div>
+                <p style="margin: 10px 0 0 0; font-size: 13px; opacity: 0.8;">A few simple questions reconnect you with what's actually happening inside.</p>
+            </div>
+
+            <div class="question-box">
+                <div class="question-text">2 — The AI Navigator reflects, not directs.</div>
+                <p style="margin: 10px 0 0 0; font-size: 13px; opacity: 0.8;">No pressure. No "advice." Just a clean mirror.</p>
+            </div>
+
+            <div class="question-box">
+                <div class="question-text">3 — You receive your ORIENTIR.</div>
+                <p style="margin: 10px 0 0 0; font-size: 13px; opacity: 0.8;">A short clarity note: anchor-words, a direction phrase, and a next-step.</p>
+            </div>
+
+            <div class="question-box">
+                <div class="question-text">4 — You return whenever you lose your North.</div>
+                <p style="margin: 10px 0 0 0; font-size: 13px; opacity: 0.8;">The doorway is always open.</p>
+            </div>
+        </div>
+        <div class="footer">orientir.navigation</div>
+    </div>
+
+    <!-- PAGE 3: WHY & FOR WHOM -->
+    <div class="page">
+        <div class="content">
+            <h2>Why It Matters</h2>
+            
+            <p>The world is shifting faster than human adaptation allows. People drown in information but starve for orientation.</p>
+            
+            <p>ORIENTIR helps you slow down, realign, and return to your internal axis before taking the next step.</p>
+            
+            <span class="emphasis">This isn't escape. This is calibration.</span>
+
+            <div class="gradient-accent"></div>
+
+            <h2>For Whom</h2>
+            
+            <ul>
+                <li>for the overwhelmed</li>
+                <li>for the emotionally overloaded</li>
+                <li>for those between worlds — old & emerging</li>
+                <li>for people who finished therapy and feel "the next layer" calling</li>
+                <li>for those craving clarity without pressure or noise</li>
+            </ul>
+
+            <div class="section-box">
+                <p style="text-align: center; font-size: 16px; margin: 0;">
+                    <strong>Every human is a map.<br>ORIENTIR helps you read it.</strong>
+                </p>
+            </div>
+
+            <div class="gradient-accent"></div>
+
+            <h2>1-Minute Inner Check-In</h2>
+            
+            <p>Close your eyes. Soften the mind. Let attention spread.</p>
+            
+            <p><strong>Ask: "Where am I inside right now?"</strong></p>
+            
+            <p>Notice the internal tone:</p>
+            
+            <div style="margin: 20px 0; font-size: 13px; opacity: 0.8; line-height: 2;">
+                clear / cloudy<br>
+                heavy / light<br>
+                calm / tense<br>
+                focused / scattered<br>
+                grounded / drifting
+            </div>
+            
+            <span class="emphasis">This is your coordinate.</span>
+        </div>
+        <div class="footer">orientir.navigation</div>
+    </div>
+
+    <!-- PAGE 4: QUICKMAP + CTA -->
+    <div class="page">
+        <div class="content">
+            <h2>QuickMap (Level 1)</h2>
+            
+            <p>Three Starter Questions. Answer intuitively.</p>
+
+            <div class="question-box">
+                <div class="question-text">1. What feels most alive in you today?</div>
+                <div class="question-options">clarity • emotion • movement • meaning</div>
+            </div>
+
+            <div class="question-box">
+                <div class="question-text">2. What are you craving right now?</div>
+                <div class="question-options">structure • connection • change • purpose</div>
+            </div>
+
+            <div class="question-box">
+                <div class="question-text">3. What feels missing?</div>
+                <div class="question-options">direction • understanding • freedom • grounding</div>
+            </div>
+
+            <p style="margin-top: 20px;">Your answers create your entry coordinate — your starting point on the inner map.</p>
+
+            <div class="gradient-accent"></div>
+
+            <!-- INTERACTIVE CTA -->
+            <div class="cta-section">
+                <div class="cta-title">Continue Your Navigation</div>
+                <div class="cta-description">
+                    Take the Interactive QuickMap Test<br>
+                    A 2-minute navigation moment that gives you your starting coordinate.
+                </div>
+                <a href="YOUR_LINK_HERE" class="cta-button" target="_blank">
+                    Take the Quick Test
+                </a>
+            </div>
+
+            <div style="margin-top: 40px; padding: 25px; background: rgba(232, 220, 196, 0.04); border-radius: 12px; text-align: center;">
+                <p style="margin-bottom: 10px; font-size: 15px;"><strong>Want Deeper Mapping?</strong></p>
+                <p style="font-size: 13px; opacity: 0.8; margin: 0;">
+                    Explore the Deep Calibration — Your axis layout, dominant patterns, and a personal navigation direction.
+                </p>
+            </div>
+        </div>
+        <div class="footer">orientir.navigation — Created by Milana Kravchenko</div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORIENTIR — Full Consciousness Map</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #0a0a0a;
+            color: #e8dcc4;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 50% 20%, rgba(30, 40, 60, 0.4) 0%, transparent 50%),
+                        radial-gradient(ellipse at 50% 80%, rgba(60, 30, 20, 0.4) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .orientir-symbol {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 30px;
+            filter: drop-shadow(0 0 30px rgba(232, 220, 196, 0.4));
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: 300;
+            letter-spacing: 10px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #e8dcc4 0%, #d4a574 50%, #c89860 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 11px;
+            letter-spacing: 3px;
+            opacity: 0.6;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        /* Welcome Screen */
+        .welcome-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .welcome-title {
+            font-size: 32px;
+            margin-bottom: 25px;
+            font-weight: 300;
+            line-height: 1.4;
+        }
+
+        .welcome-text {
+            font-size: 17px;
+            line-height: 1.7;
+            opacity: 0.8;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .feature-list {
+            text-align: left;
+            margin: 40px 0;
+            padding: 30px;
+            background: rgba(232, 220, 196, 0.04);
+            border: 1px solid rgba(232, 220, 196, 0.12);
+            border-radius: 16px;
+        }
+
+        .feature-item {
+            padding: 15px 0;
+            font-size: 15px;
+            line-height: 1.6;
+            opacity: 0.9;
+            border-bottom: 1px solid rgba(232, 220, 196, 0.08);
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-item strong {
+            color: #d4a574;
+            font-weight: 400;
+        }
+
+        /* Questions */
+        .question-container {
+            margin-bottom: 40px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            font-size: 11px;
+            letter-spacing: 3px;
+            opacity: 0.4;
+            text-transform: uppercase;
+        }
+
+        .question-category {
+            font-size: 11px;
+            letter-spacing: 2px;
+            opacity: 0.5;
+            padding: 6px 12px;
+            background: rgba(232, 220, 196, 0.08);
+            border-radius: 6px;
+        }
+
+        .question-text {
+            font-size: 24px;
+            line-height: 1.4;
+            margin-bottom: 35px;
+            font-weight: 300;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: rgba(232, 220, 196, 0.03);
+            border: 1px solid rgba(232, 220, 196, 0.1);
+            padding: 20px 22px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 15px;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .option:hover {
+            background: rgba(232, 220, 196, 0.08);
+            border-color: rgba(232, 220, 196, 0.25);
+            transform: translateX(6px);
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.15), rgba(232, 220, 196, 0.15));
+            border-color: rgba(212, 165, 116, 0.6);
+            box-shadow: 0 6px 24px rgba(212, 165, 116, 0.2);
+        }
+
+        /* Buttons */
+        .btn {
+            background: linear-gradient(135deg, #c89860 0%, #d4a574 50%, #e8dcc4 100%);
+            color: #0a0a0a;
+            border: none;
+            padding: 18px 40px;
+            font-size: 13px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            width: 100%;
+            margin-top: 30px;
+            box-shadow: 0 8px 32px rgba(212, 165, 116, 0.3);
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(212, 165, 116, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: rgba(232, 220, 196, 0.1);
+            color: #e8dcc4;
+            border: 1px solid rgba(232, 220, 196, 0.3);
+            box-shadow: none;
+            margin-top: 15px;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(232, 220, 196, 0.15);
+            box-shadow: 0 8px 24px rgba(232, 220, 196, 0.2);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 2px;
+            background: rgba(232, 220, 196, 0.08);
+            margin-bottom: 40px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #c89860, #d4a574, #e8dcc4);
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 20px rgba(212, 165, 116, 0.6);
+        }
+
+        /* Results - Full Map */
+        .map-container {
+            margin-top: 40px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            margin: 50px 0 30px;
+            font-weight: 300;
+            text-align: center;
+        }
+
+        .axis-visualization {
+            width: 100%;
+            max-width: 400px;
+            height: 400px;
+            margin: 50px auto;
+            position: relative;
+        }
+
+        .axis-chart {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-section {
+            background: rgba(232, 220, 196, 0.04);
+            border: 1px solid rgba(232, 220, 196, 0.12);
+            padding: 35px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+        }
+
+        .map-section-number {
+            font-size: 12px;
+            letter-spacing: 2px;
+            opacity: 0.5;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .map-section-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+            font-weight: 300;
+            color: #d4a574;
+        }
+
+        .map-section-content {
+            font-size: 16px;
+            line-height: 1.7;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .axis-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .axis-card {
+            background: rgba(232, 220, 196, 0.04);
+            border: 1px solid rgba(232, 220, 196, 0.12);
+            padding: 25px;
+            border-radius: 14px;
+        }
+
+        .axis-card-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .axis-card-score {
+            font-size: 32px;
+            margin: 15px 0;
+            font-weight: 300;
+        }
+
+        .axis-card-description {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        .axis-card.logic { border-left: 3px solid #4a90e2; }
+        .axis-card.empathy { border-left: 3px solid #e27474; }
+        .axis-card.adaptability { border-left: 3px solid #74e2a3; }
+        .axis-card.meaning { border-left: 3px solid #e2c774; }
+
+        .axis-card.logic .axis-card-score { color: #4a90e2; }
+        .axis-card.empathy .axis-card-score { color: #e27474; }
+        .axis-card.adaptability .axis-card-score { color: #74e2a3; }
+        .axis-card.meaning .axis-card-score { color: #e2c774; }
+
+        @media print {
+            body::before { display: none; }
+            .btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div class="screen active" id="welcome">
+            <div class="header">
+                <div class="orientir-symbol">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="100" cy="100" r="88" fill="none" stroke="#e8dcc4" stroke-width="2.5" opacity="0.9"/>
+                        <circle cx="100" cy="12" r="7" fill="#e8dcc4"/>
+                        <circle cx="188" cy="100" r="7" fill="#e8dcc4"/>
+                        <circle cx="100" cy="188" r="7" fill="#e8dcc4"/>
+                        <circle cx="12" cy="100" r="7" fill="#e8dcc4"/>
+                        <line x1="25" y1="100" x2="175" y2="100" stroke="#e8dcc4" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="100" y1="40" x2="100" y2="175" stroke="#e8dcc4" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="60" y1="140" x2="100" y2="100" stroke="#e8dcc4" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="140" y1="140" x2="100" y2="100" stroke="#e8dcc4" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M 100 40 L 118 70 L 100 100 L 82 70 Z" fill="none" stroke="#e8dcc4" stroke-width="2.5" opacity="0.9"/>
+                    </svg>
+                </div>
+                <h1>ORIENTIR</h1>
+                <div class="subtitle">Full Consciousness Navigation Map</div>
+            </div>
+
+            <div class="welcome-content">
+                <div class="welcome-title">Deep Dive Into Your Inner Compass</div>
+                <div class="welcome-text">
+                    This comprehensive diagnostic will map all four axes of your consciousness, reveal your current position, identify your systemic pattern, and show you the exact exit point from your cycle.
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <strong>12 Reflective Questions</strong> — Deep exploration of all four axes
+                    </div>
+                    <div class="feature-item">
+                        <strong>Complete Axis Analysis</strong> — Logic, Empathy, Adaptability, Meaning
+                    </div>
+                    <div class="feature-item">
+                        <strong>7-Point Navigation Map</strong> — Your full consciousness blueprint
+                    </div>
+                    <div class="feature-item">
+                        <strong>Visual Coherence Chart</strong> — See your current state at a glance
+                    </div>
+                    <div class="feature-item">
+                        <strong>Personalized Exit Strategy</strong> — Concrete first step and direction
+                    </div>
+                </div>
+
+                <button class="btn" onclick="startFullDiagnostic()">Begin Full Navigation</button>
+            </div>
+        </div>
+
+        <!-- Questions Screen -->
+        <div class="screen" id="questions">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            
+            <div class="question-container" id="questionContainer"></div>
+            
+            <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>Continue</button>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="screen" id="results">
+            <div class="header">
+                <div class="orientir-symbol">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="100" cy="100" r="88" fill="none" stroke="#e8dcc4" stroke-width="2.5" opacity="0.9"/>
+                        <circle cx="100" cy="12" r="7" fill="#e8dcc4"/>
+                        <circle cx="188" cy="100" r="7" fill="#e8dcc4"/>
+                        <circle cx="100" cy="188" r="7" fill="#e8dcc4"/>
+                        <circle cx="12" cy="100" r="7" fill="#e8dcc4"/>
+                        <line x1="100" y1="25" x2="100" y2="175" stroke="#e8dcc4" stroke-width="2.5"/>
+                        <line x1="25" y1="100" x2="175" y2="100" stroke="#e8dcc4" stroke-width="2.5"/>
+                        <line x1="43" y1="43" x2="157" y2="157" stroke="#e8dcc4" stroke-width="2.5"/>
+                        <line x1="157" y1="43" x2="43" y2="157" stroke="#e8dcc4" stroke-width="2.5"/>
+                        <path d="M 100 55 L 125 100 L 100 145 L 75 100 Z" fill="none" stroke="#e8dcc4" stroke-width="2.5" opacity="0.9"/>
+                        <circle cx="100" cy="100" r="4" fill="#e8dcc4"/>
+                    </svg>
+                </div>
+                <h1>Your Map</h1>
+                <div class="subtitle">Personal Consciousness Navigation</div>
+            </div>
+
+            <div class="map-container">
+                <!-- Axis Visualization -->
+                <div class="section-title">Your Coherence State</div>
+                <div class="axis-visualization">
+                    <canvas id="axisChart" class="axis-chart"></canvas>
+                </div>
+
+                <!-- Axis Breakdown -->
+                <div class="axis-breakdown" id="axisBreakdown"></div>
+
+                <!-- 7-Point Map -->
+                <div class="section-title">Your 7-Point Navigation Map</div>
+                <div id="mapPoints"></div>
+
+                <!-- Action Buttons -->
+                <button class="btn" onclick="window.print()">Download Your Map</button>
+                <button class="btn btn-secondary" onclick="location.reload()">Start New Navigation</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // Logic Axis
+            { category: "LOGIC", text: "When you know what needs to be done, what stops you?", 
+              options: [
+                { text: "I see the entire system clearly, but my body won't follow through", score: { logic: 3 }},
+                { text: "I start strong but can't maintain focus until completion", score: { logic: 2 }},
+                { text: "I jump between tasks, finishing none", score: { logic: 1 }},
+                { text: "I execute plans systematically and finish what I start", score: { logic: 4 }}
+              ]
+            },
+            { category: "LOGIC", text: "How do you experience your mind-body connection?",
+              options: [
+                { text: "My mind races ahead while my body remains stuck", score: { logic: 1 }},
+                { text: "There's a constant negotiation between knowing and doing", score: { logic: 2 }},
+                { text: "I feel aligned when I'm working on something meaningful", score: { logic: 3 }},
+                { text: "My thoughts and actions flow naturally together", score: { logic: 4 }}
+              ]
+            },
+            { category: "LOGIC", text: "What's your relationship with incomplete projects?",
+              options: [
+                { text: "They haunt me. I carry guilt for every unfinished thing", score: { logic: 1 }},
+                { text: "I have many started projects but struggle to close them", score: { logic: 2 }},
+                { text: "I'm learning to let go of what doesn't serve me", score: { logic: 3 }},
+                { text: "I complete what matters and release what doesn't", score: { logic: 4 }}
+              ]
+            },
+            
+            // Empathy Axis
+            { category: "EMPATHY", text: "How do you experience other people's emotions?",
+              options: [
+                { text: "I absorb them completely, losing track of my own feelings", score: { empathy: 1 }},
+                { text: "I feel them deeply but struggle to maintain boundaries", score: { empathy: 2 }},
+                { text: "I sense them clearly and can choose my level of engagement", score: { empathy: 3 }},
+                { text: "I feel connected yet maintain clear emotional boundaries", score: { empathy: 4 }}
+              ]
+            },
+            { category: "EMPATHY", text: "When someone is in pain, what's your instinct?",
+              options: [
+                { text: "I must fix it. Their pain becomes my responsibility", score: { empathy: 1 }},
+                { text: "I feel compelled to help even when it drains me", score: { empathy: 2 }},
+                { text: "I offer support but recognize their journey is their own", score: { empathy: 3 }},
+                { text: "I hold space without taking on their burden", score: { empathy: 4 }}
+              ]
+            },
+            { category: "EMPATHY", text: "How do you recharge after intense emotional interactions?",
+              options: [
+                { text: "I struggle to shake off what I've absorbed from others", score: { empathy: 1 }},
+                { text: "It takes time and deliberate effort to return to myself", score: { empathy: 2 }},
+                { text: "I have rituals that help me release what isn't mine", score: { empathy: 3 }},
+                { text: "I naturally reset without carrying emotional residue", score: { empathy: 4 }}
+              ]
+            },
+
+            // Adaptability Axis
+            { category: "ADAPTABILITY", text: "Do you recognize repeating patterns in your life?",
+              options: [
+                { text: "Yes, and I feel powerless to break them", score: { adaptability: 1 }},
+                { text: "I see them but struggle to act differently", score: { adaptability: 2 }},
+                { text: "I'm actively working to interrupt old cycles", score: { adaptability: 3 }},
+                { text: "I've successfully broken free from limiting patterns", score: { adaptability: 4 }}
+              ]
+            },
+            { category: "ADAPTABILITY", text: "When faced with unexpected change, how do you respond?",
+              options: [
+                { text: "I freeze or revert to old coping mechanisms", score: { adaptability: 1 }},
+                { text: "I resist initially but eventually adapt", score: { adaptability: 2 }},
+                { text: "I pause, assess, then choose my response consciously", score: { adaptability: 3 }},
+                { text: "I move fluidly with change, seeing opportunity in disruption", score: { adaptability: 4 }}
+              ]
+            },
+            { category: "ADAPTABILITY", text: "What's your relationship with your past?",
+              options: [
+                { text: "I'm stuck in old stories that define who I think I am", score: { adaptability: 1 }},
+                { text: "I'm aware of patterns but unsure how to rewrite them", score: { adaptability: 2 }},
+                { text: "I'm actively creating new narratives for myself", score: { adaptability: 3 }},
+                { text: "My past informs me but doesn't imprison me", score: { adaptability: 4 }}
+              ]
+            },
+
+            // Meaning Axis
+            { category: "MEANING", text: "Do you know what truly matters to you?",
+              options: [
+                { text: "I've lost touch with what once felt meaningful", score: { meaning: 1 }},
+                { text: "I have glimpses but they feel distant or unclear", score: { meaning: 2 }},
+                { text: "I'm reconnecting with my deeper values", score: { meaning: 3 }},
+                { text: "I live in alignment with my core truth", score: { meaning: 4 }}
+              ]
+            },
+            { category: "MEANING", text: "How much of your life feels like yours?",
+              options: [
+                { text: "Most of it feels like performing roles others expect", score: { meaning: 1 }},
+                { text: "I'm aware of the gap between who I am and who I present", score: { meaning: 2 }},
+                { text: "I'm gradually claiming more authentic space", score: { meaning: 3 }},
+                { text: "I live from my own center, not others' expectations", score: { meaning: 4 }}
+              ]
+            },
+            { category: "MEANING", text: "What drives your daily actions?",
+              options: [
+                { text: "Survival mode—just getting through the day", score: { meaning: 1 }},
+                { text: "A mix of obligation and occasional moments of purpose", score: { meaning: 2 }},
+                { text: "Growing alignment between my actions and values", score: { meaning: 3 }},
+                { text: "Clear sense of direction and intentional choices", score: { meaning: 4 }}
+              ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = [];
+        let selectedOption = null;
+        let axisScores = { logic: 0, empathy: 0, adaptability: 0, meaning: 0 };
+
+        function startFullDiagnostic() {
+            document.getElementById('welcome').classList.remove('active');
+            document.getElementById('questions').classList.add('active');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            const html = `
+                <div class="question-header">
+                    <div class="question-number">Question ${currentQuestion + 1} of ${questions.length}</div>
+                    <div class="question-category">${question.category}</div>
+                </div>
+                <div class="question-text">${question.text}</div>
+                <div class="options">
+                    ${question.options.map((opt, idx) => `
+                        <div class="option" onclick="selectOption(${idx})">
+                            ${opt.text}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            document.getElementById('questionContainer').innerHTML = html;
+            document.getElementById('nextBtn').disabled = true;
+            selectedOption = null;
+        }
+
+        function selectOption(index) {
+            selectedOption = index;
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[index].classList.add('selected');
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (selectedOption !== null) {
+                const answer = questions[currentQuestion].options[selectedOption];
+                answers.push(answer);
+                
+                // Add scores
+                Object.keys(answer.score).forEach(axis => {
+                    axisScores[axis] += answer.score[axis];
+                });
+                
+                currentQuestion++;
+                
+                if (currentQuestion < questions.length) {
+                    showQuestion();
+                } else {
+                    generateResults();
+                }
+            }
+        }
+
+        function generateResults() {
+            document.getElementById('questions').classList.remove('active');
+            document.getElementById('results').classList.add('active');
+            
+            // Normalize scores (0-100)
+            const maxScore = 12; // 3 questions per axis * 4 max score
+            Object.keys(axisScores).forEach(axis => {
+                axisScores[axis] = Math.round((axisScores[axis] / maxScore) * 100);
+            });
+            
+            drawAxisChart();
+            generateAxisBreakdown();
+            generateSevenPointMap();
+        }
+
+        function drawAxisChart() {
+            const canvas = document.getElementById('axisChart');
+            const ctx = canvas.getContext('2d');
+            const size = 400;
+            canvas.width = size;
+            canvas.height = size;
+            
+            const center = size / 2;
+            const radius = size * 0.35;
+            const scores = [
+                axisScores.logic,
+                axisScores.empathy,
+                axisScores.adaptability,
+                axisScores.meaning
+            ];
+            const colors = ['#4a90e2', '#e27474', '#74e2a3', '#e2c774'];
+            const labels = ['LOGIC', 'EMPATHY', 'ADAPTABILITY', 'MEANING'];
+            
+            // Draw background circles
+            ctx.strokeStyle = 'rgba(232, 220, 196, 0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 1; i <= 4; i++) {
+                ctx.beginPath();
+                ctx.arc(center, center, radius * (i/4), 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            
+            // Draw axes
+            ctx.strokeStyle = 'rgba(232, 220, 196, 0.15)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 4; i++) {
+                const angle = (Math.PI * 2 * i / 4) - Math.PI / 2;
+                ctx.beginPath();
+                ctx.moveTo(center, center);
+                ctx.lineTo(
+                    center + Math.cos(angle) * radius,
+                    center + Math.sin(angle) * radius
+                );
+                ctx.stroke();
+            }
+            
+            // Draw data
+            ctx.fillStyle = 'rgba(212, 165, 116, 0.2)';
+            ctx.strokeStyle = '#d4a574';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            scores.forEach((score, i) => {
+                const angle = (Math.PI * 2 * i / 4) - Math.PI / 2;
+                const r = radius * (score / 100);
+                const x = center + Math.cos(angle) * r;
+                const y = center + Math.sin(angle) * r;
+                
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            // Draw points and labels
+            scores.forEach((score, i) => {
+                const angle = (Math.PI * 2 * i / 4) - Math.PI / 2;
+                const r = radius * (score / 100);
+                const x = center + Math.cos(angle) * r;
+                const y = center + Math.sin(angle) * r;
+                
+                // Point
+                ctx.fillStyle = colors[i];
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Label
+                const labelR = radius + 30;
+                const labelX = center + Math.cos(angle) * labelR;
+                const labelY = center + Math.sin(angle) * labelR;
+                
+                ctx.fillStyle = '#e8dcc4';
+                ctx.font = '12px -apple-system, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(labels[i], labelX, labelY);
+                ctx.fillText(score + '%', labelX, labelY + 15);
+            });
+        }
+
+        function generateAxisBreakdown() {
+            const interpretations = {
+                logic: {
+                    low: "Your mind-body connection needs restoration. Focus on completing small tasks.",
+                    medium: "You have clarity but struggle with execution. Practice micro-commitments.",
+                    high: "Strong structural thinking. Your plans align with your actions."
+                },
+                empathy: {
+                    low: "You may be protecting yourself by numbing. Gentle reconnection is needed.",
+                    medium: "You feel deeply but boundaries are inconsistent. Practice selective engagement.",
+                    high: "Clear emotional intelligence with maintained boundaries."
+                },
+                adaptability: {
+                    low: "Old patterns have a strong hold. Notice when cycles begin.",
+                    medium: "You're aware of patterns and beginning to interrupt them.",
+                    high: "Fluid response to change. You've broken free from limiting scripts."
+                },
+                meaning: {
+                    low: "Disconnect from your core truth. Begin with micro-moments of authenticity.",
+                    medium: "Glimpses of purpose emerging. Strengthen connection to what matters.",
+                    high: "Clear alignment with your values. Living from your center."
+                }
+            };
+            
+            let html = '';
+            Object.keys(axisScores).forEach(axis => {
+                const score = axisScores[axis];
+                const level = score < 40 ? 'low' : score < 70 ? 'medium' : 'high';
+                const axisName = axis.charAt(0).toUpperCase() + axis.slice(1);
+                
+                html += `
+                    <div class="axis-card ${axis}">
+                        <div class="axis-card-title">${axisName}</div>
+                        <div class="axis-card-score">${score}%</div>
+                        <div class="axis-card-description">${interpretations[axis][level]}</div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('axisBreakdown').innerHTML = html;
+        }
+
+        function generateSevenPointMap() {
+            const lowestAxis = Object.keys(axisScores).reduce((a, b) => 
+                axisScores[a] < axisScores[b] ? a : b
+            );
+            
+            const maps = {
+                logic: {
+                    position: "You're in the gap between understanding and action. Your mind sees clearly, but your body hasn't received permission to move.",
+                    glitch: "Execution Paralysis — The more you plan, the less you do.",
+                    axis: "Logic axis requires reconnection with embodied action.",
+                    rhythm: "Your body needs small, completed cycles to rebuild trust.",
+                    exit: "The moment you choose one micro-action over perfect planning.",
+                    step: "Today: Complete one task in 15 minutes. No planning, just doing.",
+                    direction: "From analysis to embodied completion. Build momentum through tiny wins."
+                },
+                empathy: {
+                    position: "You're drowning in feelings — yours and everyone else's. Boundaries have dissolved.",
+                    glitch: "Emotional Fusion — Where you end and others begin has become unclear.",
+                    axis: "Empathy axis requires boundary restoration.",
+                    rhythm: "Your nervous system needs practice holding 'no' without guilt.",
+                    exit: "The moment you choose self-preservation over saving someone.",
+                    step: "Today: Say 'no' to one request without explaining why.",
+                    direction: "From absorption to conscious compassion. Feel without fixing."
+                },
+                adaptability: {
+                    position: "You're caught in a repeating loop. Different faces, same pattern.",
+                    glitch: "Pattern Lock — Your system defaults to familiar pain over unknown freedom.",
+                    axis: "Adaptability axis stuck in old programming.",
+                    rhythm: "Your consciousness needs space to choose differently.",
+                    exit: "The split second between trigger and automatic response.",
+                    step: "Today: Notice one moment where the pattern begins, and pause.",
+                    direction: "From automatic to conscious. You're not your patterns."
+                },
+                meaning: {
+                    position: "You're living someone else's script. Your inner compass is buried under expectations.",
+                    glitch: "Identity Eclipse — Performing a role instead of living your truth.",
+                    axis: "Meaning axis disconnected from authentic self.",
+                    rhythm: "Your soul needs micro-moments of truth-telling.",
+                    exit: "The instant you speak one true thing, even if only to yourself.",
+                    step: "Today: Name one thing you actually want, without justification.",
+                    direction: "From performance to presence. Your life is yours to author."
+                }
+            };
+            
+            const map = maps[lowestAxis];
+            const points = [
+                { number: 1, title: "Current Position", content: map.position },
+                { number: 2, title: "Systemic Glitch", content: map.glitch },
+                { number: 3, title: "Axis Requiring Attention", content: map.axis },
+                { number: 4, title: "Your Natural Rhythm", content: map.rhythm },
+                { number: 5, title: "Exit Point", content: map.exit },
+                { number: 6, title: "First Gentle Step", content: map.step },
+                { number: 7, title: "Direction Forward", content: map.direction }
+            ];
+            
+            let html = '';
+            points.forEach(point => {
+                html += `
+                    <div class="map-section">
+                        <div class="map-section-number">${point.number} / 7</div>
+                        <div class="map-section-title">${point.title}</div>
+                        <div class="map-section-content">${point.content}</div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('mapPoints').innerHTML = html;
+        }
+    </script>
+</body>
+</html>
